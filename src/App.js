@@ -1,5 +1,5 @@
 import React from 'react'
-import * as BooksAPI from './BooksAPI'
+
 import './App.css'
 import {
   BrowserRouter ,
@@ -10,19 +10,32 @@ import {
 import Header from './components/Header';
 import SearchComponent from './components/Search';
 import HomeComponent from './components/HomeComponent';
+import * as BooksAPI from './BooksAPI'
 
 class BooksApp extends React.Component {
   
+  constructor(props){
+    super(props);
+    this.state={
+      current:[],want:[],read:[]
+    }
+  
+  }
+
+  
+  
    SearchComponent=()=>{
     return(
-      <SearchComponent/>
+      <SearchComponent current={this.state.current}  want ={this.state.want}
+      read={this.state.read}/>
     );
   }
 
 
   HomeComponent=()=>{
     return(
-      <HomeComponent/>
+      <HomeComponent current={this.state.current}  want ={this.state.want}
+      read={this.state.read}/>
     );
   }
 

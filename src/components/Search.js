@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import * as BooksAPI from '../BooksAPI'
 import { Link } from 'react-router-dom';
+//import Options from '../shared/options';
 
 
 
@@ -10,23 +11,82 @@ class Search extends Component{
     super(props);
     this.state={
         query:'ART',
-        search_books:[1]
+        selected:'',
+        search_books:[1],
+        allBooks:[1],
+                show:false
+     
     }
     this.handleChange = this.handleChange.bind(this);
+    this.handleSubmit=this.handleSubmit.bind(this);
+    this.addBook=this.addBook.bind(this);
+    this.newHandleChange=this.newHandleChange.bind(this);
     }
-
+    
+addBook=(book)=>{
+  switch(this.state.selected){
+    case "currentlyReading":
+      this.props.current.push(book);
+      break;
+      case "wantToRead": this.props.want.push(book);
+break;
+      case "read":this.props.read.push(book);
+      break;
+  }
+}
     handleChange(e){
 this.setState({query:e.target.value})
     }
+    newHandleChange= (e)=>{
+      this.setState({ selected:e.target.value });
+      console.log(`Option selected:`, this.state.selected);
+      
+    }
 
     componentDidMount(){
+      if(this.state.show==true){
         BooksAPI.search(this.state.query).then(books=>
-            this.setState({search_books:books}));
+            this.setState({search_books:books}))
+        }
+else{
+            BooksAPI.getAll().then(books=>
+              this.setState({allBooks:books}))
+}
+    }
+
+    handleSubmit(e){
+     // alert('Your favorite flavor is: ' + this.state.query);
+      this.setState({show:true});
+      e.preventDefault();
     }
 render(){
-console.log(this.state.search_books);
+  const ans2=this.state.allBooks.map((book)=>
+        {
 
-  const ans=this.state.search_books.map((book)=>{
+
+            return(
+<li>
+          <div className="book">
+            <div className="book-top">
+              <div className="book-cover" style={{ width: 128, height: 192, backgroundImage:'url({back.smallThumbnail})' }}></div>
+              <div className="book-shelf-changer">
+                <select>
+                  <option value="move" disabled onChange={this.handleChange}>Move to...</option>
+                  <option value="currentlyReading" onChange={this.handleChange}>Currently Reading</option>
+                  <option value="wantToRead" onChange={this.handleChange}>Want to Read</option>
+                  <option value="read" onChange={this.handleChange}>Read</option>
+                  <option value="none" onChange={this.handleChange}>None</option>
+                </select>
+              </div>
+            </div>
+            <div className="book-title">{book.title}</div>
+            <div className="book-authors">{book.author}</div>
+          </div>
+        </li>
+            );
+
+        });
+  const ans1=this.state.search_books.map((book)=>{
        
         return(
 
@@ -37,12 +97,13 @@ console.log(this.state.search_books);
                         <div className="book-top">
                           <div className="book-cover" style={{ width: 128, height: 193, backgroundImage: 'url("http://books.google.com/books/content?id=PGR2AwAAQBAJ&printsec=frontcover&img=1&zoom=1&imgtk=AFLRE73-GnPVEyb7MOCxDzOYF1PTQRuf6nCss9LMNOSWBpxBrz8Pm2_mFtWMMg_Y1dx92HT7cUoQBeSWjs3oEztBVhUeDFQX6-tWlWz1-feexS0mlJPjotcwFqAg6hBYDXuK_bkyHD-y&source=gbs_api")' }}></div>
                           <div className="book-shelf-changer">
-                            <select>
-                              <option value="move" disabled>Move to...</option>
-                              <option value="currentlyReading">Currently Reading</option>
-                              <option value="wantToRead">Want to Read</option>
-                              <option value="read">Read</option>
-                              <option value="none">None</option>
+                            <select value={this.state.selected} onChange={(e,book)=>{this.newHandleChange(e);this.addBook(book)}}>
+                         
+                            <option value="move"  >Move to...</option>
+                  <option value="currentlyReading" >Currently Reading</option>
+                  <option value="wantToRead" >Want to Read</option>
+                  <option value="read" >Read</option>
+                  <option value="none" >None</option>
                             </select>
                           </div>
                         </div>
@@ -57,7 +118,9 @@ console.log(this.state.search_books);
         );
 
     });
-
+    //console.log(this.state.allBooks);
+   // console.log(this.state.search_books);
+console.log((this.props.current));
    
 return(
   <div>
@@ -66,21 +129,26 @@ return(
 </div>
 
 <div>
-<form>
+<form onSubmit={this.handleSubmit}>
     <label>
         Enter the category:
         <input type="text" value={this.state.query} onChange={this.handleChange}/>
     </label>
-    <input type="submit" value="search"/>
+    <input type="submit" value="search" />
 </form>
 </div>
 
 
-<div className="bookshelf">
+ {this.state.show===true?<div className="bookshelf">
 <ol className="books-grid">
-  {ans}
+  {ans1}
   </ol>
 </div>
+:<div className="bookshelf">
+<ol className="books-grid">
+  {ans2}
+  </ol>
+</div>}
 
 
 </div>
