@@ -47,20 +47,19 @@ class BooksApp extends React.Component {
     });
   }
 
-  
-   /*renderSearch=()=>{
+   Search=()=>{
     return(
-      <SearchComponent addToCurrent={this.addToCurrent} addToRead={this.addToRead} addToWant={this.addToWant}/>
+<SearchComponent addToCurrent={this.addToCurrent} addToRead={this.addToRead} addToWant={this.addToWant}/>
     );
   }
 
-
-  renderHome=()=>{
+  Home=()=>{
     return(
       <HomeComponent current={this.state.current}  want ={this.state.want}
       read={this.state.read}/>
     );
-  }*/
+  }
+   
 
   render() {
     console.log(this.state.current);
@@ -68,9 +67,16 @@ class BooksApp extends React.Component {
       <div className="app">
   
   <Header/>
-  <SearchComponent addToCurrent={this.addToCurrent} addToRead={this.addToRead} addToWant={this.addToWant}/>
-  <HomeComponent current={this.state.current}  want ={this.state.want}
-      read={this.state.read}/>
+  <Switch>
+    
+    <Route path='/search' component={this.Search}/>
+   
+<Route path='/home' component={this.Home}/>
+<Redirect to='/'/>
+   
+  </Switch>
+  
+  
         </div>
           
         );
@@ -79,12 +85,3 @@ class BooksApp extends React.Component {
   }
 
 export default BooksApp;
-/* <Switch>
-    
-    <Route path='/search' component={SearchComponent}/>
-   
-
-<Route path='/home' component={HomeComponent}/>
-<Redirect to='/'/>
-   
-  </Switch>*/
