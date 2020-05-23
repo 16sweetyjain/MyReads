@@ -5,7 +5,8 @@ import {
   BrowserRouter ,
   Switch,
   Route,
-  Link
+  Link,
+  Redirect
 } from "react-router-dom";
 import Header from './components/Header';
 import SearchComponent from './components/Search';
@@ -22,36 +23,54 @@ class BooksApp extends React.Component {
   
   }
 
+  addToCurrent=book=>{
+    let books=[...this.state.current,book];
+    this.setState({
+      current:books
+    });
+    this.addToWant=this.addToWant.bind(this);
+    this.addToRead=this.addToRead.bind(this);
+    this.addToCurrent=this.addToCurrent.bind(this);
+  }
+
+  addToWant=book=>{
+    let books=[...this.state.want,book];
+    this.setState({
+      want:books
+    });
+  }
+
+  addToRead=book=>{
+    let books=[...this.state.read,book];
+    this.setState({
+      read:books
+    });
+  }
+
   
-  
-   SearchComponent=()=>{
+   /*renderSearch=()=>{
     return(
-      <SearchComponent current={this.state.current}  want ={this.state.want}
-      read={this.state.read}/>
+      <SearchComponent addToCurrent={this.addToCurrent} addToRead={this.addToRead} addToWant={this.addToWant}/>
     );
   }
 
 
-  HomeComponent=()=>{
+  renderHome=()=>{
     return(
       <HomeComponent current={this.state.current}  want ={this.state.want}
       read={this.state.read}/>
     );
-  }
+  }*/
 
   render() {
+    console.log(this.state.current);
     return (
       <div className="app">
   
   <Header/>
-  <Switch>
-    
-    <Route path='/search' component={SearchComponent}/>
-   
-
-<Route path='/home' component={HomeComponent}/>
-   
-  </Switch>
+  <SearchComponent addToCurrent={this.addToCurrent} addToRead={this.addToRead} addToWant={this.addToWant}/>
+  <HomeComponent current={this.state.current}  want ={this.state.want}
+      read={this.state.read}/>
         </div>
           
         );
@@ -60,3 +79,12 @@ class BooksApp extends React.Component {
   }
 
 export default BooksApp;
+/* <Switch>
+    
+    <Route path='/search' component={SearchComponent}/>
+   
+
+<Route path='/home' component={HomeComponent}/>
+<Redirect to='/'/>
+   
+  </Switch>*/

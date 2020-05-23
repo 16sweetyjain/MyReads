@@ -24,14 +24,13 @@ class Search extends Component{
     }
     
 addBook=(book)=>{
-  switch(this.state.selected){
-    case "currentlyReading":
-      this.props.current.push(book);
-      break;
-      case "wantToRead": this.props.want.push(book);
-break;
-      case "read":this.props.read.push(book);
-      break;
+  if(this.state.selected== "currentlyReading"){
+    this.props.addToCurrent(book);
+   if(this.state.selected=="wantToRead")
+        this.props.addToWant(book);
+     if(this.state.selected=="read")
+     this.props.addToRead(book);
+  
   }
 }
     handleChange(e){
@@ -46,7 +45,7 @@ this.setState({query:e.target.value})
     componentDidMount(){
       if(this.state.show==true){
         BooksAPI.search(this.state.query).then(books=>
-            this.setState({search_books:books}))
+           /* this.setState({search_books:books}) */ console.log(books));
         }
 else{
             BooksAPI.getAll().then(books=>
@@ -60,6 +59,7 @@ else{
       e.preventDefault();
     }
 render(){
+  console.log(this.state.query);
   const ans2=this.state.allBooks.map((book)=>
         {
 
@@ -71,11 +71,11 @@ render(){
               <div className="book-cover" style={{ width: 128, height: 192, backgroundImage:'url({back.smallThumbnail})' }}></div>
               <div className="book-shelf-changer">
                 <select>
-                  <option value="move" disabled onChange={this.handleChange}>Move to...</option>
-                  <option value="currentlyReading" onChange={this.handleChange}>Currently Reading</option>
-                  <option value="wantToRead" onChange={this.handleChange}>Want to Read</option>
-                  <option value="read" onChange={this.handleChange}>Read</option>
-                  <option value="none" onChange={this.handleChange}>None</option>
+                  <option value="move" disabled >Move to...</option>
+                  <option value="currentlyReading" >Currently Reading</option>
+                  <option value="wantToRead" >Want to Read</option>
+                  <option value="read">Read</option>
+                  <option value="none" >None</option>
                 </select>
               </div>
             </div>
@@ -124,9 +124,7 @@ console.log((this.props.current));
    
 return(
   <div>
-<div>
-<Link to='/home'>Home</Link>
-</div>
+
 
 <div>
 <form onSubmit={this.handleSubmit}>
