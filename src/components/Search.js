@@ -39,8 +39,7 @@ this.setState({query:e.target.value})
     newHandleChange= (e)=>{
       this.setState({ selected:e.target.value });
       e.preventDefault();
-      BooksAPI.search(e.target.value).then(books=>
-      /*  this.setState({search_books:books})      */   console.log(books)).catch(console.error());
+    
         
      
       console.log(`Option selected:`, this.state.selected);
@@ -57,6 +56,8 @@ this.setState({query:e.target.value})
     handleSubmit(e){
      // alert('Your favorite flavor is: ' + this.state.query);
       this.setState({show:true});
+        BooksAPI.search(e.target.value).then(books=>
+       this.setState({search_books:books}));
       e.preventDefault();
     }
 render(){
