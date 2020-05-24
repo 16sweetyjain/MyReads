@@ -115,7 +115,7 @@ if(this.state.categoryBooks!=null){
                        <div className="book-cover" style={{ width: 128, height: 192, backgroundImage:'url({book.thumbnail})' }}>
                 
                        <div className="book-shelf-changer">
-                         <select   value={this.state.shelf}  onChange={this.handleShelfChange}>
+                         <select   value={this.state.shelf}  onChange="this.handleShelfChange;this.addBooks({this.book};">
                            <option value="move" disabled >Move to...</option>
                            <option value="currentlyReading" selected >Currently Reading</option>
                            <option value="wantToRead" >Want to Read</option>
@@ -184,3 +184,4 @@ if(this.state.categoryBooks!=null){
 
 
 export default Search;
+
