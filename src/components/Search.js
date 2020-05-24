@@ -1,5 +1,4 @@
-
- import React, {Component} from 'react';
+import React, {Component} from 'react';
 import * as BooksAPI from '../BooksAPI'
 import { Link } from 'react-router-dom';
 let cat_books;
@@ -8,6 +7,7 @@ class Search extends Component{
 
 constructor(props){
   super(props);
+  
   this.state={
 category:null,
 categoryBooks:[],allBooks:[],show:false,
@@ -16,8 +16,11 @@ shelf:'art'
   this.handleSubmit=this.handleSubmit.bind(this);
   this.handleChange=this.handleChange.bind(this);
   this.handleShelfChange=this.handleShelfChange.bind(this);
+ this.addBooks=this.addBooks.bind(this);
 
 }
+
+
 
 componentDidMount(){
   BooksAPI.getAll().then(books=>
@@ -37,14 +40,33 @@ handleChange(e){
   this.setState({category:e.target.value});
   e.preventDefault();
 }
+
+ 
+
+
+
    handleShelfChange(e){
+     if(e.target.value!=null)
      this.setState({shelf:e.target.value});
-     console.log(this.state.shelf);
+  
+ //   console.log(book); 
+   //  console.log(this.state.shelf);
      e.preventDefault();
    } 
 
-
+addBooks(book){
+  if(this.state.shelf=="currentlyReading"){
+    this.props.addToCurrent(book);
+  }  
+  if(this.state.shelf=="wantToRead"){
+    this.props.addToCurrent(book);
+  }
+  if(this.state.shelf=="read"){
+    this.props.addToCurrent(book);
+  }
+}
   render(){
+   // console.log(this.props);
    
     if(this.state.allBooks!=null){
       all_books=  this.state.allBooks.map((book) => {
@@ -83,8 +105,8 @@ handleChange(e){
 if(this.state.categoryBooks!=null){
    cat_books=  this.state.categoryBooks.map((book) => {
   // console.log(book);
-        
-     
+  
+     this.addBooks({book});
     
       return(
          <li>
@@ -94,8 +116,8 @@ if(this.state.categoryBooks!=null){
                 
                        <div className="book-shelf-changer">
                          <select   value={this.state.shelf}  onChange={this.handleShelfChange}>
-                           <option value="move" >Move to...</option>
-                           <option value="currentlyReading" >Currently Reading</option>
+                           <option value="move" disabled >Move to...</option>
+                           <option value="currentlyReading" selected >Currently Reading</option>
                            <option value="wantToRead" >Want to Read</option>
                            <option value="read" >Read</option>
                            <option value="none" >None</option>
@@ -109,6 +131,7 @@ if(this.state.categoryBooks!=null){
                 
                    </li>     
          );
+        
          
        
       });
