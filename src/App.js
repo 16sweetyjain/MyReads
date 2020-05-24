@@ -18,9 +18,16 @@ class BooksApp extends React.Component {
   constructor(props){
     super(props);
     this.state={
-      current:[],want:[],read:[]
+      current:[],want:[],read:[],allBooks:[]
     }
+    this.addToWant=this.addToWant.bind(this);
+    this.addToRead=this.addToRead.bind(this);
+    this.addToCurrent=this.addToCurrent.bind(this);
   
+  }
+  componentDidMount(){
+    BooksAPI.getAll().then(books=>
+      this.setState({allBooks:books}));
   }
 
   addToCurrent=book=>{
@@ -28,9 +35,7 @@ class BooksApp extends React.Component {
     this.setState({
       current:books
     });
-    this.addToWant=this.addToWant.bind(this);
-    this.addToRead=this.addToRead.bind(this);
-    this.addToCurrent=this.addToCurrent.bind(this);
+   
   }
 
   addToWant=book=>{
@@ -56,13 +61,23 @@ class BooksApp extends React.Component {
   Home=()=>{
     return(
       <HomeComponent current={this.state.current}  want ={this.state.want}
-      read={this.state.read}/>
+      read={this.state.read} allBooks={this.state.allBooks}
+      addToCurrent={this.addToCurrent} addToRead={this.addToRead} addToWant={this.addToWant}/>
     );
   }
    
 
   render() {
-    console.log(this.state.current);
+   /* console.log('current:')
+  console.log(this.state.current);
+  console.log('read:')
+ console.log(this.state.read);
+ console.log('want:');
+  console.log(this.state.want);*/
+  this.state.current.map((book)=>{
+    console.log(book.id);
+  })
+  //console.log(this.state.allBooks);
     return (
       <div className="app">
   
