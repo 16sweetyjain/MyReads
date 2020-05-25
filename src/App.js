@@ -138,7 +138,7 @@ deleteFromWant=(bookId)=>{
     <Route path='/search' component={this.Search}/>
    
 <Route path='/home' component={this.Home}/>
-<Redirect to='/'/>
+<Redirect to='/home'/>
    
   </Switch>
   
