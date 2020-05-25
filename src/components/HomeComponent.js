@@ -15,143 +15,185 @@ this.handleShelfUpdateForWant=this.handleShelfUpdateForWant.bind(this);
 
 }
 
-handleShelfUpdateForCurrent(book,e){
- /* this.setState({shelf_current:e.target.value});
-  //console.log(e.target.value);
- // console.log(book.id);
- const booki=this.props.current.filter(book=>book.id===bookId);
+handleShelfUpdateForCurrent(book,bookId,e){
+ this.setState({shelf_current:e.target.value});
+  
+ console.log(book);
  this.props.deleteFromCurrent(bookId);
   if(e.target.value=="wantToRead"){
  
-  this.props.addToWant(booki,bookId);
+  this.props.addToWant(book,bookId);
     }
 
     if(e.target.value=="read"){
-      this.props.addToRead(booki,bookId);
-    }*/
-    BooksAPI.update(book,e.target.value).then(booki=>console.log(booki));
-
+      this.props.addToRead(book,bookId);
+    }
     
 }
 
-handleShelfUpdateForWant(bookId,e){
+
+handleShelfUpdateForWant(book,bookId,e){
   this.setState({shelf_want:e.target.value});
-  //console.log(e.target.value);
- // console.log(book.id);
- /*const booki=this.props.current.filter(book=>book.id===bookId);
- this.props.deleteFromWant(bookId);
-  if(e.target.value=="read"){
+   
+  //console.log(book);
+  this.props.deleteFromWant(bookId);
+   if(e.target.value=="currentlyReading"){
+  
+   this.props.addToCurrent(book,bookId);
+     }
  
-  this.props.addToRead(booki,bookId);
-    }
+     if(e.target.value=="read"){
+       this.props.addToRead(book,bookId);
+     }
+     
+ }
 
-    if(e.target.value=="currentlyReading"){
-      this.props.addToCurrent(booki,bookId);
-    }*/
 
-    
-}
-
-handleShelfUpdateForRead(bookId,e){
+ handleShelfUpdateForRead(book,bookId,e){
   this.setState({shelf_read:e.target.value});
-  //console.log(e.target.value);
- // console.log(book.id);
- const booki=this.props.read.filter(book=>book.id===bookId);
- this.props.deleteFromRead(bookId);
-  if(e.target.value=="wantToRead"){
+   
+  //console.log(book);
+  this.props.deleteFromRead(bookId);
+   if(e.target.value=="wantToRead"){
+  
+   this.props.addToWant(book,bookId);
+     }
  
-  this.props.addToWant(booki,bookId);
-    }
+     if(e.target.value=="currentlyReading"){
+  
+      this.props.addToCurrent(book,bookId);
+        }
+     
+ }
 
-    if(e.target.value=="currentlyReading"){
-      this.props.addToCurrent(booki,bookId);
-    }
 
-    
-}
  
     render(){
-//console.log(this.props);
-     const curr=this.props.current.map((book)=>{
-       const id=book.id
-   // console.log(book.description);
+
+     const curr=this.props.current.map((el)=>{
+       const book=el.book.book;
+      // console.log(booki);
+      let back;
+  back=book.imageLinks;
+  const isBack=back===undefined?null:"url("+book.imageLinks.thumbnail+")";
+       const id=el.id;
+       let author;
+       let first=book.authors;
+       if(first!==undefined){
+      author=(book.authors)[0];
+       }
+       else{
+         author=undefined;
+       }
+  
           return(
         <li>
                   <div className="book">
                     <div className="book-top">
-                      <div className="book-cover" style={{ width: 128, height: 192, backgroundImage:'url("http://books.google.com/books/content?id=PGR2AwAAQBAJ&printsec=frontcover&img=1&zoom=1&imgtk=AFLRE73-GnPVEyb7MOCxDzOYF1PTQRuf6nCss9LMNOSWBpxBrz8Pm2_mFtWMMg_Y1dx92HT7cUoQBeSWjs3oEztBVhUeDFQX6-tWlWz1-feexS0mlJPjotcwFqAg6hBYDXuK_bkyHD-y&source=gbs_api")' }}>
+                      <div className="book-cover" style={{ width: 128, height: 192, backgroundImage: isBack}}/>
                
                       <div className="book-shelf-changer">
-                        <select  value={this.state.shelf_current}  onChange={e=>this.handleShelfUpdateForCurrent({book},e)}>
+                        <select  value={this.state.shelf_current} onChange={e=>this.handleShelfUpdateForCurrent({book},id,e)}  >
                           <option value="move" >Move to...</option>
-                          <option value="currentlyReading" >Currently Reading</option>
+                          <option value="currentlyReading" disabled >Currently Reading</option>
                           <option value="wantToRead" >Want to Read</option>
                           <option value="read" >Read</option>
                           <option value="none" >None</option>
                         </select>
                       </div>
                     </div>
+                  
                     <div className="book-title">{book.title}</div>
+                    {author===undefined?null: <div className="book-authors">{author}</div>}
                     
+              </div>
               
-                  </div>
-                  </div>
+                  
                
                   </li>     
         );
      });
-     const read=this.props.read.map((book)=>{
-      const id=book.id
+     const read=this.props.read.map((el)=>{
+      const book=el.book.book;
+      const id=el.id;
+      let back;
+  back=book.imageLinks;
+  const isBack=back===undefined?null:"url("+book.imageLinks.thumbnail+")";
+      let author;
+      let first=book.authors;
+      if(first!==undefined){
+     author=(book.authors)[0];
+      }
+      else{
+        author=undefined;
+      }
       return(
         <li>
-                  <div className="book">
-                    <div className="book-top">
-                      <div className="book-cover" style={{ width: 128, height: 192, backgroundImage:'url({book.thumbnail})'}}>
-               
-                      <div className="book-shelf-changer">
-                        <select value={this.state.shelf_read}  onChange={e=>this.handleShelfUpdateForRead(id,e)}>
-                          <option value="move" >Move to...</option>
-                          <option value="currentlyReading" >Currently Reading</option>
-                          <option value="wantToRead" >Want to Read</option>
-                          <option value="read" >Read</option>
-                          <option value="none" >None</option>
-                        </select>
-                      </div>
-                    </div>
-                    <div className="book-title">{book.title}</div>
-                
-              
-                  </div>
-                  </div>
-               
-                  </li>     
+        <div className="book">
+          <div className="book-top">
+            <div className="book-cover" style={{ width: 128, height: 192, backgroundImage: isBack}}/>
+     
+            <div className="book-shelf-changer">
+              <select  value={this.state.shelf_read} onChange={e=>this.handleShelfUpdateForRead({book},id,e)}  >
+                <option value="move" >Move to...</option>
+                <option value="currentlyReading" disabled >Currently Reading</option>
+                <option value="wantToRead" >Want to Read</option>
+                <option value="read" >Read</option>
+                <option value="none" >None</option>
+              </select>
+            </div>
+          </div>
+        
+          <div className="book-title">{book.title}</div>
+          {author===undefined?null: <div className="book-authors">{author}</div>}
+          
+    </div>
+    
+        
+     
+        </li>     
         );
      });
-     const want=this.props.want.map((book)=>{
-      const id=book.id
+     const want=this.props.want.map((el)=>{
+      const book=el.book.book;
+      const id=el.id;
+      let back;
+  back=book.imageLinks;
+  const isBack=back===undefined?null:"url("+book.imageLinks.thumbnail+")";
+      let author;
+      let first=book.authors;
+      if(first!==undefined){
+     author=(book.authors)[0];
+      }
+      else{
+        author=undefined;
+      }
       return(
+       
         <li>
-                  <div className="book">
-                    <div className="book-top">
-                      <div className="book-cover" style={{ width: 128, height: 192, backgroundImage:'url({book.thumbnail})'}}>
-               
-                      <div className="book-shelf-changer">
-                        <select value={this.state.shelf_want}  onChange={e=>this.handleShelfUpdateForWant(id,e)}>
-                          <option value="move" >Move to...</option>
-                          <option value="currentlyReading" >Currently Reading</option>
-                          <option value="wantToRead" >Want to Read</option>
-                          <option value="read" >Read</option>
-                          <option value="none" >None</option>
-                        </select>
-                      </div>
-                    </div>
-                    <div className="book-title">{book.title}</div>
-                
-              
-                  </div>
-                  </div>
-               
-                  </li>     
+        <div className="book">
+          <div className="book-top">
+            <div className="book-cover" style={{ width: 128, height: 192, backgroundImage:isBack }}/>
+     
+            <div className="book-shelf-changer">
+              <select  value={this.state.shelf_want} onChange={e=>this.handleShelfUpdateForWant({book},id,e)}  >
+                <option value="move" >Move to...</option>
+                <option value="currentlyReading" disabled >Currently Reading</option>
+                <option value="wantToRead" >Want to Read</option>
+                <option value="read" >Read</option>
+                <option value="none" >None</option>
+              </select>
+            </div>
+          </div>
+        
+          <div className="book-title">{book.title}</div>
+          {author===undefined?null: <div className="book-authors">{author}</div>}
+          
+    </div>
+    
+        
+     
+        </li>     
         );
      });
         return(
