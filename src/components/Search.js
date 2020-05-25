@@ -16,7 +16,7 @@ shelf:'art'
   this.handleSubmit=this.handleSubmit.bind(this);
   this.handleChange=this.handleChange.bind(this);
   this.handleShelfChange=this.handleShelfChange.bind(this);
- this.addBooks=this.addBooks.bind(this);
+// this.addBooks=this.addBooks.bind(this);
 
 }
 
@@ -28,6 +28,7 @@ componentDidMount(){
 }
 handleSubmit(e)
 {
+ // console.log(this.state.category);
  BooksAPI.search(this.state.category).then(books=>
 
   this.setState({categoryBooks:books}));
@@ -45,26 +46,29 @@ handleChange(e){
 
 
 
-   handleShelfChange(e){
+   handleShelfChange(bookId,e){
+    // console.log(e.target.value);
      if(e.target.value!=null)
      this.setState({shelf:e.target.value});
-  
+  //   console.log(bookId);
+
+  //const book=this.state.categoryBooks.filter((b)=>b.id===bookId);
+
+     if(e.target.value=="currentlyReading"){
+      this.props.addToCurrent(bookId,this.state.categoryBooks);
+      //console.log(book);
+    }  
+    if(e.target.value=="wantToRead"){
+      this.props.addToWant(bookId,this.state.categoryBooks);
+    }
+    if(e.target.value=="read"){
+      this.props.addToRead(bookId,this.state.categoryBooks);
+    }
  //   console.log(book); 
    //  console.log(this.state.shelf);
      e.preventDefault();
    } 
 
-addBooks(book){
-  if(this.state.shelf=="currentlyReading"){
-    this.props.addToCurrent(book);
-  }  
-  if(this.state.shelf=="wantToRead"){
-    this.props.addToCurrent(book);
-  }
-  if(this.state.shelf=="read"){
-    this.props.addToCurrent(book);
-  }
-}
   render(){
    // console.log(this.props);
    
@@ -78,8 +82,7 @@ addBooks(book){
             <li>
                       <div className="book">
                         <div className="book-top">
-                          <div className="book-cover" style={{ width: 128, height: 192, backgroundImage:'url("http://books.google.com/books/content?id=PGR2AwAAQBAJ&printsec=frontcover&img=1&zoom=1&imgtk=AFLRE73-GnPVEyb7MOCxDzOYF1PTQRuf6nCss9LMNOSWBpxBrz8Pm2_mFtWMMg_Y1dx92HT7cUoQBeSWjs3oEztBVhUeDFQX6-tWlWz1-feexS0mlJPjotcwFqAg6hBYDXuK_bkyHD-y&source=gbs_api")' }}>
-                   
+                          <div className="book-cover" style={{ width: 128, height: 192, backgroundImage:'url({book.thumbnail})'}}>
                           <div className="book-shelf-changer">
                             <select>
                               <option value="move" >Move to...</option>
@@ -104,9 +107,9 @@ addBooks(book){
 
 if(this.state.categoryBooks!=null){
    cat_books=  this.state.categoryBooks.map((book) => {
-  // console.log(book);
-  
-     this.addBooks({book});
+//console.log(book.id);
+  const id=book.id;
+   //  this.addBooks({book});
     
       return(
          <li>
@@ -115,7 +118,7 @@ if(this.state.categoryBooks!=null){
                        <div className="book-cover" style={{ width: 128, height: 192, backgroundImage:'url({book.thumbnail})' }}>
                 
                        <div className="book-shelf-changer">
-                         <select   value={this.state.shelf}  onChange="this.handleShelfChange;this.addBooks({this.book};">
+                         <select   value={this.state.shelf}  onChange={e=>this.handleShelfChange(id,e)}>
                            <option value="move" disabled >Move to...</option>
                            <option value="currentlyReading" selected >Currently Reading</option>
                            <option value="wantToRead" >Want to Read</option>
@@ -143,6 +146,9 @@ if(this.state.categoryBooks!=null){
  
     return(
       <div>
+        <div>
+        <Link to='/home'>Home</Link>
+        </div>
         <div>
         <form onSubmit={this.handleSubmit}>
 <label>
@@ -184,4 +190,3 @@ if(this.state.categoryBooks!=null){
 
 
 export default Search;
-
