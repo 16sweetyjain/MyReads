@@ -1,3 +1,4 @@
+
 import React from 'react'
 
 import './App.css'
@@ -23,6 +24,9 @@ class BooksApp extends React.Component {
     this.addToWant=this.addToWant.bind(this);
     this.addToRead=this.addToRead.bind(this);
     this.addToCurrent=this.addToCurrent.bind(this);
+    this.deleteFromCurrent=this.deleteFromCurrent.bind(this);
+    this.deleteFromRead=this.deleteFromRead.bind(this);
+    this.deleteFromWant=this.deleteFromWant.bind(this);
   
   }
   componentDidMount(){
@@ -30,23 +34,70 @@ class BooksApp extends React.Component {
       this.setState({allBooks:books}));
   }
 
-  addToCurrent=book=>{
-    let books=[...this.state.current,book];
+  deleteFromCurrent=(bookId)=>{
+  
+      let booki =this.state.current.filter((book)=>{
+      return (book.id!==bookId);
+      
+      });
+      this.setState({current:booki});
+          }
+  
+  deleteFromRead=(bookId)=>{
+  
+    let booki =this.state.read.filter((book)=>{
+    return (book.id!==bookId);
+    
+    });
+    this.setState({read:booki});
+        }
+
+deleteFromWant=(bookId)=>{
+  
+  let booki =this.state.want.filter((book)=>{
+  return (book.id!==bookId);
+  
+  });
+  this.setState({want:booki});
+      }
+
+
+  addToCurrent=(bookId,catBooks)=>{
+ let book=catBooks.filter(b=>b.id===bookId);
+ let booki=Object.assign({},book,{id:bookId});
+
+ //console.log(bookId);
+ //console.log(booki);  
+   let books=[...this.state.current,booki];
     this.setState({
       current:books
     });
    
   }
 
-  addToWant=book=>{
-    let books=[...this.state.want,book];
+  addToWant=(bookId,catBooks)=>{
+  
+    let book=catBooks.filter(b=>b.id===bookId);
+    //console.log(bookId);
+   // console.log(book);
+    let booki=Object.assign({},book,{id:bookId});
+
+
+   let books=[...this.state.current,booki];
     this.setState({
       want:books
     });
   }
 
-  addToRead=book=>{
-    let books=[...this.state.read,book];
+  addToRead=(bookId,catBooks)=>{
+    let book=catBooks.filter(b=>b.id===bookId);
+   // console.log(bookId);
+   // console.log(book);    
+    let booki=Object.assign({},book,{id:bookId});
+
+ //console.log(bookId);
+ //console.log(booki);  
+   let books=[...this.state.current,booki];
     this.setState({
       read:books
     });
@@ -61,8 +112,7 @@ class BooksApp extends React.Component {
   Home=()=>{
     return(
       <HomeComponent current={this.state.current}  want ={this.state.want}
-      read={this.state.read} allBooks={this.state.allBooks}
-      addToCurrent={this.addToCurrent} addToRead={this.addToRead} addToWant={this.addToWant}/>
+      read={this.state.read} />
     );
   }
    
@@ -74,12 +124,13 @@ class BooksApp extends React.Component {
  console.log(this.state.read);
  console.log('want:');
   console.log(this.state.want);*/
-  this.state.current.map((book)=>{
-    console.log(book.id);
-  })
+  /*this.state.current.map((book)=>{
+   console.log(book.id);
+  })*/
   //console.log(this.state.allBooks);
     return (
       <div className="app">
+        
   
   <Header/>
   <Switch>
