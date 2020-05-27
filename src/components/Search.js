@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import * as BooksAPI from '../BooksAPI'
 import { Link } from 'react-router-dom';
+import styles from '../App.css'
 
 let cat_books;
 let all_books;
@@ -65,8 +66,9 @@ class Search extends Component {
   }
 
   render() {
-
-    if (this.state.categoryBooks != null && this.state.errorInCategory == false) {
+    console.log(this.state.category);
+    //console.log(this.state.categoryBooks.length);
+    if (this.state.categoryBooks != null && this.state.errorInCategory == false && this.state.categoryBooks.length > 0) {
       cat_books = this.state.categoryBooks.map((book) => {
 
         const id = book.id;
@@ -91,11 +93,11 @@ class Search extends Component {
                 <div className="book-cover" style={{ width: 128, height: 192, backgroundImage: isBack }} />
 
                 <div className="book-shelf-changer">
-                  <select value={this.state.shelf_current} onChange={e => this.handleShelfChange({ book }, id, e)}  >
+                  <select value={this.state.shelf} onChange={e => this.handleShelfChange({ book }, id, e)}  >
                     <option value="move" >Move to...</option>
-                    <option value="currentlyReading" >Currently Reading</option>
-                    <option value="wantToRead" >Want to Read</option>
-                    <option value="read" >Read</option>
+                    <option value="currentlyReading"  >Currently Reading</option>
+                    <option value="wantToRead"  >Want to Read</option>
+                    <option value="read">Read</option>
                     <option value="none" >None</option>
                   </select>
                 </div>
@@ -116,7 +118,8 @@ class Search extends Component {
 
 
 
-  
+
+
 
 
 
@@ -136,30 +139,25 @@ class Search extends Component {
           </form>
         </div>
 
-        {this.state.errorInCategory === true ? (
-          <div>
-            <h1>
-              Error occured
-    </h1>
+        {this.state.category === "" ? null :(
+
+          <div className="bookshelf-books">
+            <div>
+              <ol className="books-grid">
+                {cat_books}
+              </ol>
+            </div>
           </div>
-        ) : (
-
-            <div className="bookshelf-books">
+        )}
 
 
-              <div>
+          </div>
 
-                <ol className="books-grid">
 
-                  {cat_books}
-                </ol>
-
-              </div>
-            </div>)}
-
-      </div>
 
     );
+
+
 
 
   }
