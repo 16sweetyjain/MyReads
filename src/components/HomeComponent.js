@@ -7,11 +7,13 @@ class Home extends Component {
     super(props);
     this.state = {
       shelf_current: '',
-      shelf_read: '', shelf_want: ''
+      shelf_read: '', shelf_want: '',
+      shelf_all: ''
     }
     this.handleShelfUpdateForCurrent = this.handleShelfUpdateForCurrent.bind(this);
     this.handleShelfUpdateForRead = this.handleShelfUpdateForRead.bind(this);
     this.handleShelfUpdateForWant = this.handleShelfUpdateForWant.bind(this);
+    this.handleShelfUpdateForAllBooks = this.handleShelfUpdateForAllBooks.bind(this);
 
   }
 
@@ -65,16 +67,86 @@ class Home extends Component {
 
   }
 
+  handleShelfUpdateForAllBooks(book, bookId, e) {
+    this.setState({ shelf_all: e.target.value });
+
+    this.props.deleteFromAllBooks(bookId);
+
+    if (e.target.value == "currentlyReading") {
+
+      this.props.addToCurrent(book, bookId);
+    }
+
+
+    if (e.target.value == "wantToRead") {
+
+      this.props.addToWant(book, bookId);
+    }
+
+    if (e.target.value == "read") {
+
+      this.props.addToRead(book, bookId);
+    }
+
+  }
+
+
 
 
   render() {
+    const intial = this.props.allBooks.map((book) => {
+      let back;
+      if (book == undefined) {
+        back = undefined;
+      }
+      else {
+        if (book.imageLinks == undefined) {
+          back = undefined;
+        }
+        else {
+          back = book.imageLinks;
+        }
+      }
+
+      const isBack = "url(" + back.thumbnail + ")";
+      const id = book.id;
+
+      return (
+        <li>
+          <div className="book">
+            <div className="book-top">
+              <div className="book-cover" style={{ width: 128, height: 192, backgroundImage: isBack }} />
+
+              <div className="book-shelf-changer">
+                <select value={this.state.shelf_all} onChange={e => this.handleShelfUpdateForAllBooks({ book }, id, e)} >
+                  <option value="move" disabled >Move to...</option>
+                  <option value="currentlyReading"  >Currently Reading</option>
+                  <option value="wantToRead" >Want to Read</option>
+                  <option value="read" >Read</option>
+                  <option value="none" >None</option>
+                </select>
+              </div>
+            </div>
+
+            <div className="book-title">{book.title}</div>
+            <div className="book-authors">{book.author}</div>
+
+          </div>
+
+
+
+        </li>
+      );
+    });
 
     const curr = this.props.current.map((el) => {
-
-      const book = el.book.book;
-    
-
       let back;
+      const book = el.book.book;
+
+      //  console.log(book.imageLinks);
+
+
+
       let author, title;
       if (book == undefined) {
         author = undefined;
@@ -110,7 +182,7 @@ class Home extends Component {
           back = book.imageLinks;
         }
       }
-     // back=book.imageLinks;
+      // console.log(book);
 
       const isBack = back === undefined ? null : "url(" + back.thumbnail + ")";
       const id = el.id;
@@ -132,7 +204,7 @@ class Home extends Component {
               </div>
             </div>
 
-           {title===undefined?null:<div className="book-title">{title}</div> } 
+            {title === undefined ? null : <div className="book-title">{title}</div>}
             {author === undefined ? null : <div className="book-authors">{author}</div>}
 
           </div>
@@ -142,11 +214,11 @@ class Home extends Component {
         </li>
       );
     });
-    const read= this.props.read.map((el) => {
+    const read = this.props.read.map((el) => {
 
       const book = el.book.book;
-     
-    
+
+
 
       let back;
       let author, title;
@@ -173,6 +245,7 @@ class Home extends Component {
         }
       }
 
+
       if (book == undefined) {
         back = undefined;
       }
@@ -184,6 +257,7 @@ class Home extends Component {
           back = book.imageLinks;
         }
       }
+      console.log(book);
 
       const isBack = back === undefined ? null : "url(" + back.thumbnail + ")";
       const id = el.id;
@@ -195,17 +269,17 @@ class Home extends Component {
               <div className="book-cover" style={{ width: 128, height: 192, backgroundImage: isBack }} />
 
               <div className="book-shelf-changer">
-                <select value={this.state.shelf_current} onChange={e => this.handleShelfUpdateForCurrent({ book }, id, e)}  >
+                <select value={this.state.shelf_read} onChange={e => this.handleShelfUpdateForRead({ book }, id, e)}  >
                   <option value="move" >Move to...</option>
                   <option value="currentlyReading"  >Currently Reading</option>
                   <option value="wantToRead" >Want to Read</option>
-                  <option value="read"  disabled>Read</option>
+                  <option value="read" disabled >Read</option>
                   <option value="none" >None</option>
                 </select>
               </div>
             </div>
 
-           {title===undefined?null:<div className="book-title">{title}</div> } 
+            {title === undefined ? null : <div className="book-title">{title}</div>}
             {author === undefined ? null : <div className="book-authors">{author}</div>}
 
           </div>
@@ -215,11 +289,11 @@ class Home extends Component {
         </li>
       );
     });
-   
+
     const want = this.props.want.map((el) => {
 
       const book = el.book.book;
-   
+
 
       let back;
       let author, title;
@@ -257,6 +331,7 @@ class Home extends Component {
           back = book.imageLinks;
         }
       }
+      console.log(book);
 
       const isBack = back === undefined ? null : "url(" + back.thumbnail + ")";
       const id = el.id;
@@ -268,9 +343,9 @@ class Home extends Component {
               <div className="book-cover" style={{ width: 128, height: 192, backgroundImage: isBack }} />
 
               <div className="book-shelf-changer">
-                <select value={this.state.shelf_current} onChange={e => this.handleShelfUpdateForCurrent({ book }, id, e)}  >
+                <select value={this.state.shelf_want} onChange={e => this.handleShelfUpdateForWant({ book }, id, e)}  >
                   <option value="move" >Move to...</option>
-                  <option value="currentlyReading" disabled >Currently Reading</option>
+                  <option value="currentlyReading" >Currently Reading</option>
                   <option value="wantToRead" disabled >Want to Read</option>
                   <option value="read" >Read</option>
                   <option value="none" >None</option>
@@ -278,7 +353,7 @@ class Home extends Component {
               </div>
             </div>
 
-           {title===undefined?null:<div className="book-title">{title}</div> } 
+            {title === undefined ? null : <div className="book-title">{title}</div>}
             {author === undefined ? null : <div className="book-authors">{author}</div>}
 
           </div>
@@ -290,6 +365,15 @@ class Home extends Component {
     });
     return (
       <div>
+        <div className="bookshelf">
+
+          <div className="bookshelf-books">
+            <ol className="books-grid">
+              {intial}
+            </ol>
+          </div>
+        </div>
+
         < div className="list-books-content">
           <div>
             <div className="bookshelf">
