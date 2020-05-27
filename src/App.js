@@ -17,99 +17,13 @@ class BooksApp extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      want: [
-        {book:
-          {
-          book:{
-          allowAnonLogging: false,
-          authors: (2) ["Stuart Jonathan Russell", "Peter Norvig"],
-          averageRating: 4.5,
-          canonicalVolumeLink: "https://books.google.com/books/about/Artificial_Intelligence.html?hl=&id=8jZBksh-bUMC",
-          categories: ["Computers"],
-          contentVersion: "preview-1.0.0",
-          description: "Artificial intelligence: A Modern Approach, 3e,is ideal for one or two-semester, undergraduate or graduate-level courses in Artificial Intelligence. It is also a valuable resource for computer professionals, linguists, and cognitive scientists interested in artificial intelligence. The revision of this best-selling text offers the most comprehensive, up-to-date introduction to the theory and practice of artificial intelligence.",
-          imageLinks: {smallThumbnail: "http://books.google.com/books/content?id=8jZBksh-b…C&printsec=frontcover&img=1&zoom=5&source=gbs_api", thumbnail: "http://books.google.com/books/content?id=8jZBksh-b…C&printsec=frontcover&img=1&zoom=1&source=gbs_api"},
-       
-          infoLink: "http://books.google.com/books?id=8jZBksh-bUMC&dq=artificial+intelligence&hl=&source=gbs_api",
-          language: "en",
-          maturityRating: "NOT_MATURE",
-          pageCount: 1132,
-          previewLink: "http://books.google.com/books?id=8jZBksh-bUMC&q=artificial+intelligence&dq=artificial+intelligence&hl=&cd=1&source=gbs_api",
-          printType: "BOOK",
-          publishedDate: "2010",
-          publisher: "Prentice Hall",
-          ratingsCount: 10,
-          readingModes: {text: false, image: false},
-          subtitle: "A Modern Approach",
-          title: "Artificial Intelligence",
-          }
-          },
-          id:"8jZBksh-bUMC"
-          }
-          
-    
-      ],
- read: [{book:
-        {
-        book:
-        {
-        allowAnonLogging: false,
-        authors: ["John Drury"],
-        averageRating: 5,
-        canonicalVolumeLink: "https://books.google.com/books/about/Poetry_Dictionary.html?hl=&id=vERZtJC5AmkC",
-        categories: ["Reference"],
-        contentVersion: "1.0.0.0.preview.1",
-        description: "Revised and updated, The Poetry Dictionary is the most comprehensive resource of poetry terms for any lover, teacher, or student of poetry. Author and poet John Drury gives clear, relevant definitions to the terms that all poets need to know and understand. In a friendly tone, with hundreds of classic and contemporary examples, Drury teaches concepts that will broaden and stimulate your creative process.",
-        imageLinks: {smallThumbnail: "http://books.google.com/books/content?id=vERZtJC5A…=frontcover&img=1&zoom=5&edge=curl&source=gbs_api", thumbnail: "http://books.google.com/books/content?id=vERZtJC5A…=frontcover&img=1&zoom=1&edge=curl&source=gbs_api"},
-        infoLink: "http://books.google.com/books?id=vERZtJC5AmkC&dq=poetry&hl=&source=gbs_api",
-        language: "en",
-        maturityRating: "NOT_MATURE",
-        pageCount: 374,
-        previewLink: "http://books.google.com/books?id=vERZtJC5AmkC&printsec=frontcover&dq=poetry&hl=&cd=7&source=gbs_api",
-        printType: "BOOK",
-        publishedDate: "2006",
-        publisher: "Writer's Digest Books",
-        ratingsCount: 2,
-        readingModes: {text: false, image: true},
-        title: "Poetry Dictionary",
-        }
-        },
-        id:"vERZtJC5AmkC"
-        }
-        
-      ],current: [{book:
-        {
-        book:{
-        allowAnonLogging: false,
-        authors: ["John Haugeland"],
-        averageRating: 4.5,
-        canonicalVolumeLink: "https://books.google.com/books/about/Artificial_Intelligence.html?hl=&id=zLFSPdIuqKsC",
-        categories: ["Computers"],
-        contentVersion: "0.0.1.0.preview.1",
-        description: "Presented in non-technical terms, this book explores the relationship between human thinking and machine computing",
-        imageLinks: {smallThumbnail: "http://books.google.com/books/content?id=zLFSPdIuq…=frontcover&img=1&zoom=5&edge=curl&source=gbs_api", thumbnail: "http://books.google.com/books/content?id=zLFSPdIuq…=frontcover&img=1&zoom=1&edge=curl&source=gbs_api"},  
-        infoLink: "http://books.google.com/books?id=zLFSPdIuqKsC&dq=artificial+intelligence&hl=&source=gbs_api",
-        language: "en",
-        maturityRating: "NOT_MATURE",
-        pageCount: 287,
-        previewLink: "http://books.google.com/books?id=zLFSPdIuqKsC&printsec=frontcover&dq=artificial+intelligence&hl=&cd=2&source=gbs_api",
-        printType: "BOOK",
-        publishedDate: "1989-01-01",
-        publisher: "MIT Press",
-        ratingsCount: 2,
-        readingModes: {text: false, image: true},
-        subtitle: "The Very Idea",
-        title: "Artificial Intelligence"
-        }
-        }
-        ,
-        id: "zLFSPdIuqKsC"}
-    
-      ],
-
-      allBooks:[]
+      allBooks: [],
+      current: [],
+      want: [],
+      read: [],
       
-     
+
+
     }
     this.addToWant = this.addToWant.bind(this);
     this.addToRead = this.addToRead.bind(this);
@@ -117,11 +31,27 @@ class BooksApp extends React.Component {
     this.deleteFromCurrent = this.deleteFromCurrent.bind(this);
     this.deleteFromRead = this.deleteFromRead.bind(this);
     this.deleteFromWant = this.deleteFromWant.bind(this);
+    this.deleteFromAllBooks = this.deleteFromAllBooks.bind(this);
 
   }
   componentDidMount() {
-    BooksAPI.getAll().then(books =>
-      this.setState({ allBooks: books }));
+
+    BooksAPI.getAll().then(books => {
+      this.setState({ allBooks: books });
+
+    }).catch(console.error());
+
+
+  }
+
+  
+
+  deleteFromAllBooks = (bookId) => {
+    let booki = this.state.allBooks.filter((book) => {
+      return (book.id !== bookId);
+
+    });
+    this.setState({ allBooks: booki });
   }
 
   deleteFromCurrent = (bookId) => {
@@ -190,31 +120,76 @@ class BooksApp extends React.Component {
   Home = () => {
     return (
       <HomeComponent current={this.state.current} want={this.state.want}
+      allBooks={this.state.allBooks}
         read={this.state.read} addToCurrent={this.addToCurrent}
         addToRead={this.addToRead} addToWant={this.addToWant}
         deleteFromCurrent={this.deleteFromCurrent}
         deleteFromRead={this.deleteFromRead}
-        deleteFromWant={this.deleteFromWant} />
+        deleteFromWant={this.deleteFromWant} 
+        deleteFromAllBooks={this.deleteFromAllBooks}/>
     );
   }
 
 
   render() {
 
+    const intial = this.state.allBooks.map((book) => {
+      let back;
+      if (book == undefined) {
+        back = undefined;
+      }
+      else {
+        if (book.imageLinks == undefined) {
+          back = undefined;
+        }
+        else {
+          back = book.imageLinks;
+        }
+      }
 
-   /* console.log('current:')
-    console.log(this.state.current);
-    console.log('want:')
-    console.log(this.state.want);
-    console.log('read:')
-    console.log(this.state.read);*/
+      const isBack = "url(" + back.thumbnail + ")";
+      const id = book.id;
 
-console.log(this.state.current);
+      return (
+        <li>
+          <div className="book">
+            <div className="book-top">
+              <div className="book-cover" style={{ width: 128, height: 192, backgroundImage: isBack }} />
+
+              <div className="book-shelf-changer">
+                <select value={this.state.shelf} onChange={e => this.handleShelfUpdate({ book }, id, e)} >
+                  <option value="move" disabled >Move to...</option>
+                  <option value="currentlyReading"  >Currently Reading</option>
+                  <option value="wantToRead" >Want to Read</option>
+                  <option value="read" >Read</option>
+                  <option value="none" >None</option>
+                </select>
+              </div>
+            </div>
+
+            <div className="book-title">{book.title}</div>
+            <div className="book-authors">{book.author}</div>
+
+          </div>
+
+
+
+        </li>
+      );
+    });
+
+
+
+
     return (
       <div className="app">
 
 
         <Header />
+
+       
+
+
         <Switch>
 
           <Route path='/search' component={this.Search} />
