@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import styles from '../App.css'
 
 let cat_books;
-let all_books;
+
 
 class Search extends Component {
 
@@ -12,24 +12,30 @@ class Search extends Component {
     super(props);
 
     this.state = {
-      category: null,
+      category: '',
       categoryBooks: [], show: false,
-      shelf: 'art', errorInCategory: false
+      errorInCategory: false,
     };
 
-    this.handleChange = this.handleChange.bind(this);
+    this.handleSearch = this.handleSearch.bind(this);
     this.handleShelfChange = this.handleShelfChange.bind(this);
-
-
 
   }
 
-  handleChange(e) {
+  handleSearch(e) {
+
 
     this.setState({ category: e.target.value });
-    BooksAPI.search(this.state.category).then(books => {
 
-      this.setState({ categoryBooks: books });
+    BooksAPI.search(e.target.value).then(books => {
+
+      if (books.length > 0) {
+
+        this.setState({ categoryBooks: books });
+      }
+      else {
+        this.setState({ categoryBooks: [] });
+      }
 
     }).catch(error => {
 
@@ -38,38 +44,39 @@ class Search extends Component {
 
     });
 
-    this.setState({ show: true })
+
+    // this.setState({ show: true })
     e.preventDefault();
 
   }
 
+  handleShelfChange(book, id, e) {
 
-  handleShelfChange(book, bookId, e) {
-    // console.log(e.target.value);
-    if (e.target.value != null)
-      this.setState({ shelf: e.target.value });
-
-    //console.log(book);
-    if (e.target.value == "currentlyReading") {
-      this.props.addToCurrent(book, bookId);
-      //console.log(book);
-    }
-    if (e.target.value == "wantToRead") {
-      this.props.addToWant(book, bookId);
-    }
-    if (e.target.value == "read") {
-      this.props.addToRead(book, bookId);
-    }
-    //   console.log(book); 
-    //  console.log(this.state.shelf);
+    this.props.handleShelfUpdate(book, id, e.target.value);
     e.preventDefault();
   }
+
+
+
 
   render() {
-    console.log(this.state.category);
+
+
+
+    // console.log(this.state.categoryBooks);
     //console.log(this.state.categoryBooks.length);
-    if (this.state.categoryBooks != null && this.state.errorInCategory == false && this.state.categoryBooks.length > 0) {
+    if (this.state.categoryBooks.length > 0) {
       cat_books = this.state.categoryBooks.map((book) => {
+
+        let currentShelf = '';
+        for (let each_book of this.props.books) {
+          const id = each_book.id != undefined ? each_book.id : each_book.book.id;
+
+          if (id === book.id) {
+            currentShelf = each_book.shelf;
+            break;
+          }
+        }
 
         const id = book.id;
         let back;
@@ -93,7 +100,7 @@ class Search extends Component {
                 <div className="book-cover" style={{ width: 128, height: 192, backgroundImage: isBack }} />
 
                 <div className="book-shelf-changer">
-                  <select value={this.state.shelf} onChange={e => this.handleShelfChange({ book }, id, e)}  >
+                  <select defaultValue={currentShelf} onChange={e => this.handleShelfChange({ book }, id, e)}   >
                     <option value="move" >Move to...</option>
                     <option value="currentlyReading"  >Currently Reading</option>
                     <option value="wantToRead"  >Want to Read</option>
@@ -132,14 +139,14 @@ class Search extends Component {
           <form >
             <label>
               Enter search text:
-  <input type="text" value={this.state.category} onChange={this.handleChange} />
+  <input type="text" value={this.state.category} onChange={this.handleSearch} />
 
             </label>
             <input type="submit" value="Submit" />
           </form>
         </div>
 
-        {this.state.category === "" ? null :(
+        {this.state.category === '' ? null : (
 
           <div className="bookshelf-books">
             <div>
@@ -151,7 +158,7 @@ class Search extends Component {
         )}
 
 
-          </div>
+      </div>
 
 
 
