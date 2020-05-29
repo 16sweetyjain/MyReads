@@ -11,7 +11,7 @@ import Header from './components/Header';
 import SearchComponent from './components/Search';
 import HomeComponent from './components/HomeComponent';
 import * as BooksAPI from './BooksAPI'
-let b1, b2, b3;
+
 class BooksApp extends React.Component {
 
   constructor(props) {
@@ -31,14 +31,10 @@ class BooksApp extends React.Component {
 
       this.setState({ books: books }));
 
-
-
-
-
   }
 
-  handleShelfUpdate = (newBook,newBookId, newShelf) => {
-   
+  handleShelfUpdate = (newBook, newBookId, newShelf) => {
+
 
     BooksAPI.update(newBook, newShelf).then(b => {
 
@@ -46,20 +42,20 @@ class BooksApp extends React.Component {
 
       this.setState(prevState => ({
 
-      
+
         books:
 
           prevState.books.filter(book => {
 
-           // console.log('prev:',prevState);
+
             const id = book.id != undefined ? book.id : book.book.id;
             return (id !== newBookId)
           }
 
           )
-          .concat(newBook)
+            .concat(newBook)
       }));
-//console.log(this.state.books)
+
 
     });
   }
@@ -87,16 +83,12 @@ class BooksApp extends React.Component {
       return (book.shelf === 'currentlyReading')
     });
 
-   // console.log('now:' ,this.state.books);
-   // console.log(ans);
-
 
     return (
       <div className="app">
         <Header />
 
         <Switch>
-
 
           <Route path='/search' component={this.Search} />
           <Route path='/home' component={this.Home} />
