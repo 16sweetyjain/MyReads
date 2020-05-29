@@ -38,7 +38,7 @@ class Book extends Component {
 
 
         return (
-            <li>
+            <li key={id}>
                 <div className="book">
                     <div className="book-top">
                         <div className="book-cover" style={{ width: 128, height: 192, backgroundImage: isBack }} />
