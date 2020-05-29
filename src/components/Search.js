@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import * as BooksAPI from '../BooksAPI'
 import { Link } from 'react-router-dom';
 import styles from '../App.css'
+import Book from './Book';
 
 let cat_books;
 
@@ -18,7 +19,7 @@ class Search extends Component {
     };
 
     this.handleSearch = this.handleSearch.bind(this);
-    this.handleShelfChange = this.handleShelfChange.bind(this);
+
 
   }
 
@@ -27,106 +28,39 @@ class Search extends Component {
 
     this.setState({ category: e.target.value });
 
-    BooksAPI.search(e.target.value).then(books => {
+    if (e.target.value != '') {
 
-      if (books.length > 0) {
+      BooksAPI.search(e.target.value).then(books => {
 
-        this.setState({ categoryBooks: books });
-      }
-      else {
-        this.setState({ categoryBooks: [] });
-      }
+        if (books.length > 0) {
 
-    }).catch(error => {
+          this.setState({ categoryBooks: books, errorInCategory: false });
+        }
+        else {
+          this.setState({ categoryBooks: [], errorInCategory: true });
 
-      this.setState({ errorInCategory: true })
+        }
+
+      })
+    }
+    else {
+      this.setState({ categoryBooks: [], errorInCategory: true });
+    }
 
 
-    });
-
-
-    // this.setState({ show: true })
     e.preventDefault();
 
   }
-
-  handleShelfChange(book, id, e) {
-
-    this.props.handleShelfUpdate(book, id, e.target.value);
-    e.preventDefault();
-  }
-
-
 
 
   render() {
 
+    cat_books = this.state.categoryBooks.map((book) => {
+      return (
+        <Book book={book} books={this.props.books} handleShelfUpdate={this.props.handleShelfUpdate} />
+      );
 
-
-    // console.log(this.state.categoryBooks);
-    //console.log(this.state.categoryBooks.length);
-    if (this.state.categoryBooks.length > 0) {
-      cat_books = this.state.categoryBooks.map((book) => {
-
-        let currentShelf = '';
-        for (let each_book of this.props.books) {
-          const id = each_book.id != undefined ? each_book.id : each_book.book.id;
-
-          if (id === book.id) {
-            currentShelf = each_book.shelf;
-            break;
-          }
-        }
-
-        const id = book.id;
-        let back;
-        back = book.imageLinks;
-        const isBack = back === undefined ? null : "url(" + book.imageLinks.thumbnail + ")";
-        //  this.addBooks({book});
-        let author;
-        let first = book.authors;
-        if (first !== undefined) {
-          author = (book.authors)[0];
-        }
-        else {
-          author = undefined;
-        }
-
-
-        return (
-          <li>
-            <div className="book">
-              <div className="book-top">
-                <div className="book-cover" style={{ width: 128, height: 192, backgroundImage: isBack }} />
-
-                <div className="book-shelf-changer">
-                  <select defaultValue={currentShelf} onChange={e => this.handleShelfChange({ book }, id, e)}   >
-                    <option value="move" >Move to...</option>
-                    <option value="currentlyReading"  >Currently Reading</option>
-                    <option value="wantToRead"  >Want to Read</option>
-                    <option value="read">Read</option>
-                    <option value="none" >None</option>
-                  </select>
-                </div>
-              </div>
-
-              <div className="book-title">{book.title}</div>
-              {author === undefined ? null : <div className="book-authors">{author}</div>}
-
-            </div>
-          </li>
-        );
-
-
-
-
-      });
-    }
-
-
-
-
-
+    });
 
 
 
@@ -145,9 +79,7 @@ class Search extends Component {
             <input type="submit" value="Submit" />
           </form>
         </div>
-
-        {this.state.category === '' ? null : (
-
+        {this.state.errorInCategory === true ? null : (
           <div className="bookshelf-books">
             <div>
               <ol className="books-grid">
@@ -155,17 +87,12 @@ class Search extends Component {
               </ol>
             </div>
           </div>
-        )}
 
+        )}
 
       </div>
 
-
-
     );
-
-
-
 
   }
 }
