@@ -56,8 +56,9 @@ class Search extends Component {
   render() {
 
     cat_books = this.state.categoryBooks.map((book) => {
+      const id = book.id
       return (
-        <Book book={book} books={this.props.books} handleShelfUpdate={this.props.handleShelfUpdate} />
+        <Book key={id} book={book} books={this.props.books} handleShelfUpdate={this.props.handleShelfUpdate} />
       );
 
     });
