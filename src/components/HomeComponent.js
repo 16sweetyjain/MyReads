@@ -20,10 +20,11 @@ class Home extends Component {
 
 
       const book = el.book != undefined ? el.book : el;
+      const id = book.id
 
       return (
 
-        <Book book={book} books={this.props.books} handleShelfUpdate={this.props.handleShelfUpdate} />
+        <Book key={id} book={book} books={this.props.books} handleShelfUpdate={this.props.handleShelfUpdate} />
       );
 
     });
@@ -34,10 +35,11 @@ class Home extends Component {
     const readi = read.map((el) => {
 
       const book = el.book != undefined ? el.book : el;
+      const id = book.id
 
       return (
 
-        <Book book={book} books={this.props.books} handleShelfUpdate={this.props.handleShelfUpdate} />
+        <Book key={id} book={book} books={this.props.books} handleShelfUpdate={this.props.handleShelfUpdate} />
 
       );
 
@@ -48,10 +50,11 @@ class Home extends Component {
     const want = this.props.books.filter(b => b.shelf === 'wantToRead');
     const wanti = want.map((el) => {
       const book = el.book != undefined ? el.book : el;
+      const id = book.id
 
       return (
 
-        <Book book={book} books={this.props.books} handleShelfUpdate={this.props.handleShelfUpdate} />
+        <Book key={id} book={book} books={this.props.books} handleShelfUpdate={this.props.handleShelfUpdate} />
 
 
       );
