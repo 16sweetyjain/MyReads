@@ -21,7 +21,8 @@ To get started developing right away:
     |__components
        |__Header.js #Class Component for rendering the Header for our Home Page
        |__HomeComponent.js #Class Component for rendering Home Route for directing user to Home Page
-       |__Search.js #Class Component for rendering Search Route for directing user to Search  Page and renders books based on the  search query entered
+       |__Search.js #Class Component for rendering Search Route for directing user to Search  Page and renders books
+       |__Book.js #Render book item for each component
     ├── App.css # Styles for your app. Feel free to customize this as you desire.
     ├── App.js # This is the root of your app. Contains static HTML right now.
     ├── App.test.js # Used for testing. Provided with Create React App. Testing is encouraged, but not required.
