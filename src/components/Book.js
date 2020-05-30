@@ -11,7 +11,7 @@ class Book extends Component {
 
     render() {
 
-
+        console.log(this.props);
         let currentShelf = '';
         for (let each_book of this.props.books) {
             const id = each_book.id != undefined ? each_book.id : each_book.book.id;
@@ -38,7 +38,7 @@ class Book extends Component {
 
 
         return (
-            <li key={id}>
+            <li >
                 <div className="book">
                     <div className="book-top">
                         <div className="book-cover" style={{ width: 128, height: 192, backgroundImage: isBack }} />
